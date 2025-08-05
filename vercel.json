@@ -1,0 +1,10 @@
+{
+  "env": {
+    "PYTHON_BACKEND_URL": "https://litwise-backend.onrender.com"
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  }
+} 

@@ -11,6 +11,14 @@ export const buildApiUrl = (endpoint: string): string => {
   // Remove leading slash if present to avoid double slashes
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint
   
+  // For production, always use relative URLs to avoid CORS issues
+  if (typeof window !== 'undefined') {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    if (!isLocalhost) {
+      return `/${cleanEndpoint}`
+    }
+  }
+  
   return `${API_BASE_URL}/${cleanEndpoint}`
 }
 

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { URL } from "url"
 
 // Get Python backend URL from environment variable
-const PYTHON_BACKEND_URL = process.env.PYTHON_BACKEND_URL || "http://localhost:8000"
+const PYTHON_BACKEND_URL = process.env.PYTHON_BACKEND_URL || "https://litwise-backend.onrender.com"
 
 export async function GET(request: Request) {
   try {

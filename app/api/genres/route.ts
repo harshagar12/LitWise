@@ -2,13 +2,15 @@ import { NextResponse } from "next/server"
 import { URL } from "url"
 
 // Get Python backend URL from environment variable
-const PYTHON_BACKEND_URL = process.env.PYTHON_BACKEND_URL || "http://localhost:8000"
+const PYTHON_BACKEND_URL = process.env.PYTHON_BACKEND_URL || "https://litwise-backend.onrender.com"
 
 export async function GET(request: Request) {
   const url = new URL(request.url)
   const searchParams = url.searchParams
   try {
     const topN = Number.parseInt(searchParams.get("top_n") || "20")
+
+    console.log(`Calling Python backend at: ${PYTHON_BACKEND_URL}/api/python/genres`)
 
     // Call Python recommendation engine
     const response = await fetch(`${PYTHON_BACKEND_URL}/api/python/genres`, {
@@ -20,10 +22,14 @@ export async function GET(request: Request) {
     })
 
     if (!response.ok) {
-      throw new Error("Failed to fetch genres from Python engine")
+      console.error(`Backend responded with status: ${response.status}`)
+      const errorText = await response.text()
+      console.error(`Backend error: ${errorText}`)
+      throw new Error(`Failed to fetch genres from Python engine: ${response.status}`)
     }
 
     const data = await response.json()
+    console.log(`Successfully fetched ${data.length} genres`)
     return NextResponse.json(data)
   } catch (error) {
     console.error("Error fetching genres:", error)
