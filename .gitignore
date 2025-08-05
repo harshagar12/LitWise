@@ -311,6 +311,12 @@ temp/
 data/*.csv
 !data/sample_*.csv
 
+# Large files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
 # Model cache files
 *.pkl
 *.pickle
