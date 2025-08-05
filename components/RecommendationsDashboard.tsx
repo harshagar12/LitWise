@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { BookCard } from "@/components/BookCard"
 import { ArrowLeft, RefreshCw, Grid3X3, List, Filter } from "lucide-react"
+import { buildApiUrl } from "@/lib/api"
 
 interface Book {
   goodreads_book_id: number
@@ -30,7 +31,7 @@ export const RecommendationsDashboard = ({ selectedGenres, selectedBooks, onBack
   useEffect(() => {
     const fetchRecommendations = async () => {
       try {
-        const response = await fetch("/api/recommendations", {
+        const response = await fetch(buildApiUrl("/api/recommendations"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -66,7 +67,7 @@ export const RecommendationsDashboard = ({ selectedGenres, selectedBooks, onBack
     // Re-fetch recommendations
     const fetchRecommendations = async () => {
       try {
-        const response = await fetch("/api/recommendations", {
+        const response = await fetch(buildApiUrl("/api/recommendations"), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

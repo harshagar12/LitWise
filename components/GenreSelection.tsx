@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { buildApiUrl } from "@/lib/api"
 
 interface Genre {
   tag_id: number
@@ -47,7 +48,7 @@ export default function GenreSelection() {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await fetch("/api/genres")
+        const response = await fetch(buildApiUrl("/api/genres"))
         const data = await response.json()
         setGenres(data)
       } catch (error) {

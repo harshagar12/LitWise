@@ -10,7 +10,9 @@ import sys
 import os
 
 # Add scripts directory to path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
+scripts_path = os.path.join(os.path.dirname(__file__), 'scripts')
+if scripts_path not in sys.path:
+    sys.path.insert(0, scripts_path)
 
 try:
     from recommendation_engine import recommendation_engine

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server"
 
+// Get Python backend URL from environment variable
+const PYTHON_BACKEND_URL = process.env.PYTHON_BACKEND_URL || "http://localhost:8000"
+
 export async function POST(request: Request) {
   try {
     const body = await request.json()
@@ -10,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     // Call Python recommendation engine
-    const response = await fetch("http://localhost:8000/api/python/recommendations", {
+    const response = await fetch(`${PYTHON_BACKEND_URL}/api/python/recommendations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

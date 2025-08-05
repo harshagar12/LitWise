@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { BookCard } from "@/components/BookCard";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { buildApiUrl } from "@/lib/api";
 
 interface Book {
   goodreads_book_id: number;
@@ -38,7 +39,7 @@ export const ClusterDiscovery = () => {
         selectedGenres.forEach((id) => params.append("selected_tag_ids", id));
         params.append("num_clusters", "5");
 
-        const response = await fetch(`/api/clusters?${params}`);
+        const response = await fetch(`${buildApiUrl("/api/clusters")}?${params}`);
         const data = await response.json();
         setClusters(data);
       } catch (error) {
