@@ -8,6 +8,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 import sys
 import os
+from scripts.evaluate_clusters import evaluate_clusters
+from scripts.mapk import quick_mapk_test
 
 # Add scripts directory to path
 scripts_path = os.path.join(os.path.dirname(__file__), 'scripts')
@@ -25,7 +27,7 @@ app = FastAPI(title="LitWise Recommendation API", version="1.0.0")
 # Enable CORS for Next.js frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -93,6 +95,24 @@ async def get_recommendations(request: RecommendationRequest):
         return recommendations
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error getting recommendations: {str(e)}")
+
+@app.get("/api/diagnostics")
+async def diagnostics():
+    # ---- pick tags that actually have books ----
+    popular = (
+        recommendation_engine.book_tags_df
+        .groupby("tag_id")["goodreads_book_id"].nunique()
+        .sort_values(ascending=False).head(3).index.tolist()
+    )
+    # -------------------------------------------
+    sil, dist = evaluate_clusters(popular, n_clusters=3)
+    map5 = quick_mapk_test(n_users=50, k=5)
+    return {
+        "silhouette": round(sil, 3),
+        "avg_centroid_dist": round(dist, 3),
+        "MAP@5": round(map5, 3),
+        "tags_used": list(map(int, popular)),  # JSON-safe
+    }
 
 if __name__ == "__main__":
     import uvicorn
